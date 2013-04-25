@@ -114,7 +114,7 @@ namespace Merger.Test.Unit
         }
 
         [TestMethod]
-        public void CompareAndAutoMerge_MergesMissingValue()
+        public void MergeMissingAndCompare_MergesMissingValue()
         {
             List<MergeTestObject> src, dst;
 
@@ -135,7 +135,7 @@ namespace Merger.Test.Unit
         }
 
         [TestMethod]
-        public void CompareAndAutoMerge_DoesNotOverwriteExistingValue()
+        public void MergeMissingAndCompare_DoesNotOverwriteExistingValue()
         {
             List<MergeTestObject> src, dst;
 

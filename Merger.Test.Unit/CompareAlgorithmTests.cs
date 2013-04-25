@@ -145,7 +145,7 @@ namespace Merger.Test.Unit
         }
 
         [TestMethod]
-        public void AutoCompare_MergesMissingValue()
+        public void MergeMissing_MergesMissingValue()
         {
             var comparer = MergeComparer<MergeTestObject>.Create(o => o.ID, true);
 
@@ -159,7 +159,7 @@ namespace Merger.Test.Unit
                 Property3 = null
             };
 
-            comparer.CompareAlgorithm.AutoMerge(instance1, instance2);
+            comparer.CompareAlgorithm.MergeMissing(instance1, instance2);
 
             Assert.AreEqual(instance1.Property3, instance2.Property3);
             Assert.AreEqual("foo", instance1.Property3);
@@ -167,7 +167,7 @@ namespace Merger.Test.Unit
         }
 
         [TestMethod]
-        public void AutoCompare_DoesNotOverwriteExistingValue()
+        public void MergeMissing_DoesNotOverwriteExistingValue()
         {
             var comparer = MergeComparer<MergeTestObject>.Create(o => o.ID, true);
 
@@ -182,7 +182,7 @@ namespace Merger.Test.Unit
                 Property3 = "bar"
             };
 
-            comparer.CompareAlgorithm.AutoMerge(instance1, instance2);
+            comparer.CompareAlgorithm.MergeMissing(instance1, instance2);
 
             Assert.AreNotEqual(instance1.Property3, instance2.Property3);
             Assert.AreEqual("foo", instance1.Property3);

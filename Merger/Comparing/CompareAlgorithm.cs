@@ -14,7 +14,7 @@ namespace Merger
         void ForProperty<TProperty>(Expression<Func<T, TProperty>> propertyAccessor, ISoftEqualityComparer<TProperty> comparer = null);
 
         IEnumerable<Conflict> Compare(T source, T destination);
-        void AutoMerge(T source, T destination);
+        void MergeMissing(T source, T destination);
     }
 
     public class CompareAlgorithm<T, TKey> : ICompareAlgorithm<T>
@@ -123,7 +123,7 @@ namespace Merger
             return conflicts;
         }
 
-        public void AutoMerge(T source, T destination)
+        public void MergeMissing(T source, T destination)
         {
             var propertiesToMerge = GetPropertiesToMerge();
 

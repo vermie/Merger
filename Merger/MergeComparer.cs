@@ -150,7 +150,7 @@ namespace Merger
                 if (source == null || destination == null)
                     continue;
 
-                CompareAlgorithm.AutoMerge(source, destination);
+                CompareAlgorithm.MergeMissing(source, destination);
             }
 
             return GetConflicts(matches);
