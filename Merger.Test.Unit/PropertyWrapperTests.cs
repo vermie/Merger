@@ -65,6 +65,17 @@ namespace Merger.Test.Unit
             Assert.AreEqual(canary.ToString(), instance2.Property3);
         }
 
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void Wrapper_Copy_CopyReadonlyPropertyThrows()
+        {
+            var propertyWrapper = new PropertyWrapper<TestObjectWithReadonlyProperty, int>(o => o.ReadonlyProperty);
+
+            var instance1 = new TestObjectWithReadonlyProperty();
+            var instance2 = new TestObjectWithReadonlyProperty();
+
+            propertyWrapper.Copy(instance1, instance2);
+        }
+
         [TestMethod]
         public void Wrapper_AreEqual_DefaultComparer_WorksProperly()
         {
@@ -149,6 +160,14 @@ namespace Merger.Test.Unit
             Assert.AreEqual("Property1", conflict.PropertyName);    // the property name in the lambda above
             Assert.AreEqual(instance1.Property1.ToString(), conflict.SourceValue);
             Assert.AreEqual(instance2.Property1.ToString(), conflict.DestinationValue);
+        }
+
+        [TestMethod]
+        public void Wrapper_IsReadonly()
+        {
+            var wrapper = new PropertyWrapper<TestObjectWithReadonlyProperty, int>(o => o.ReadonlyProperty);
+
+            Assert.IsTrue(wrapper.IsReadonly);
         }
 
         [TestMethod]

@@ -130,7 +130,7 @@ namespace Merger
 
             foreach (var propertyWrapper in propertiesToMerge)
             {
-                if (propertyWrapper.IsDefaultValueOn(destination))
+                if (!propertyWrapper.IsReadonly && propertyWrapper.IsDefaultValueOn(destination))
                     propertyWrapper.Copy(source, destination);
             }
         }
@@ -141,7 +141,8 @@ namespace Merger
 
             foreach (var propertyWrapper in propertiesToMerge)
             {
-                propertyWrapper.Copy(source, destination);
+                if (!propertyWrapper.IsReadonly)
+                    propertyWrapper.Copy(source, destination);
             }
         }
     }

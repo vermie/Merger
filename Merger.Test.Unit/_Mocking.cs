@@ -25,6 +25,13 @@ namespace Merger.Test.Unit
         public IEnumerable<object> ComplexMember2 { get; set; }
     }
 
+    public class TestObjectWithReadonlyProperty
+    {
+        public int Id { get; set; }
+
+        public int ReadonlyProperty { get { return 0; } }
+    }
+
     public class MergerHelper
     {
         public static int Property1Score { get { return 10; } }

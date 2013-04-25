@@ -8,6 +8,7 @@ namespace Merger
     internal interface IPropertyWrapper<T>
     {
         string Name { get; }
+        bool IsReadonly { get; }
 
         void Copy(T source, T destination);
 

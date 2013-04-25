@@ -11,6 +11,8 @@ namespace Merger
     {
         public string Name { get; private set; }
 
+        public bool IsReadonly { get { return _setter == null; } }
+
         private Action<T, TProperty> _setter;
         private Func<T, TProperty> _getter;
 
@@ -39,23 +41,30 @@ namespace Merger
 
             _getter = propertyExpression.Compile();
 
-            var instance = Expression.Parameter(typeof(T), "instance");
-            var value = Expression.Parameter(typeof(TProperty), "value");
+            var propertyInfo = (PropertyInfo)memberExpression.Member;
+            if (propertyInfo.CanWrite)
+            {
+                var instance = Expression.Parameter(typeof(T), "instance");
+                var value = Expression.Parameter(typeof(TProperty), "value");
 
-            var lambdaExpression =
-                Expression.Lambda<Action<T, TProperty>>(
-                    Expression.Assign(
-                        Expression.Property(instance, (PropertyInfo)memberExpression.Member),
-                        value),
-                    instance, value);
+                var lambdaExpression =
+                    Expression.Lambda<Action<T, TProperty>>(
+                        Expression.Assign(
+                            Expression.Property(instance, propertyInfo),
+                            value),
+                        instance, value);
 
-            _setter = lambdaExpression.Compile();
+                _setter = lambdaExpression.Compile();
+            }
 
             #endregion
         }
 
         public void Copy(T source, T destination)
         {
+            if (IsReadonly)
+                throw new InvalidOperationException(string.Format("Cannot copy property {0}.{1}; it is readonly.", typeof(T).Name, Name));
+
             var value = _getter(source);
             _setter(destination, value);
         }
