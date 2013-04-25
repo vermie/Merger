@@ -74,14 +74,14 @@ namespace Merger
                 if (!IsSimpleType(property.PropertyType))
                     continue;
 
-                var propertyWrapper = PropertyWrapper.Create<T>(property, _comparerProvider);
+                var propertyWrapper = PropertyWrapperHelper.Create<T>(property, _comparerProvider);
                 Add(propertyWrapper, false);
             }
         }
 
         public void ForProperty<TProperty>(Expression<Func<T, TProperty>> propertyExpression, ISoftEqualityComparer<TProperty> comparer = null)
         {
-            var propertyWrapper = PropertyWrapper.Create(propertyExpression, comparer ?? _comparerProvider.Get<TProperty>());
+            var propertyWrapper = PropertyWrapperHelper.Create(propertyExpression, comparer ?? _comparerProvider.Get<TProperty>());
             Add(propertyWrapper, true);
         }
 

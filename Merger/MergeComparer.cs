@@ -7,56 +7,53 @@ using System.Reflection;
 
 namespace Merger
 {
-    internal class MergeWrapper<T>
-        where T : class
-    {
-        public int Id { get; private set; }
-        public T Instance { get; private set; }
-
-        public MergeWrapper(int id, T instance)
-        {
-            Id = id;
-            Instance = instance;
-        }
-    }
-
-    internal class MergeScore<T>
-        where T : class
-    {
-        public MergeWrapper<T> Source { get; private set; }
-        public MergeWrapper<T> Destination { get; private set; }
-        public int Score { get; private set; }
-
-        public MergeScore(MergeWrapper<T> source, MergeWrapper<T> destination, int score)
-        {
-            Source = source;
-            Destination = destination;
-            Score = score;
-        }
-    }
-
-    internal class MergeMatch<T>
-        where T : class
-    {
-        public T Source { get; private set; }
-        public T Destination { get; private set; }
-
-        public MergeMatch(T source, T destination)
-        {
-            Source = source;
-            Destination = destination;
-        }
-
-        public MergeMatch(MergeScore<T> score)
-        {
-            Source = score.Source.Instance;
-            Destination = score.Destination.Instance;
-        }
-    }
-
     public class MergeComparer<T> : IMergeComparer<T>
         where T : class
     {
+        private class MergeWrapper
+        {
+            public int Id { get; private set; }
+            public T Instance { get; private set; }
+
+            public MergeWrapper(int id, T instance)
+            {
+                Id = id;
+                Instance = instance;
+            }
+        }
+
+        private class MergeScore
+        {
+            public MergeWrapper Source { get; private set; }
+            public MergeWrapper Destination { get; private set; }
+            public int Score { get; private set; }
+
+            public MergeScore(MergeWrapper source, MergeWrapper destination, int score)
+            {
+                Source = source;
+                Destination = destination;
+                Score = score;
+            }
+        }
+
+        private class MergeMatch
+        {
+            public T Source { get; private set; }
+            public T Destination { get; private set; }
+
+            public MergeMatch(T source, T destination)
+            {
+                Source = source;
+                Destination = destination;
+            }
+
+            public MergeMatch(MergeScore score)
+            {
+                Source = score.Source.Instance;
+                Destination = score.Destination.Instance;
+            }
+        }
+
         public IMatchAlgorithm<T> MatchAlgorithm { get; private set; }
         public ICompareAlgorithm<T> CompareAlgorithm { get; private set; }
 
@@ -73,12 +70,12 @@ namespace Merger
             return new MergeComparer<T>(matchAlgorithm, mergeAlgorithm);
         }
 
-        private IEnumerable<MergeMatch<T>> CompareInternal(IEnumerable<T> compareSource, IEnumerable<T> compareDestination)
+        private IEnumerable<MergeMatch> CompareInternal(IEnumerable<T> compareSource, IEnumerable<T> compareDestination)
         {
-            var sources = compareSource.Select((instance, id) => new MergeWrapper<T>(id, instance)).ToArray();
-            var destinations = compareDestination.Select((instance, id) => new MergeWrapper<T>(id, instance)).ToArray();
+            var sources = compareSource.Select((instance, id) => new MergeWrapper(id, instance)).ToArray();
+            var destinations = compareDestination.Select((instance, id) => new MergeWrapper(id, instance)).ToArray();
 
-            var matches = new List<MergeMatch<T>>();
+            var matches = new List<MergeMatch>();
             var matchedSources = new HashSet<int>();
             var matchedDestinations = new HashSet<int>();
 
@@ -86,7 +83,7 @@ namespace Merger
                          from d in destinations
                          let score = MatchAlgorithm.CalclateMatchIndex(s.Instance, d.Instance)
                          orderby score descending
-                         select new MergeScore<T>(s, d, score);
+                         select new MergeScore(s, d, score);
 
             foreach (var score in scores)
             {
@@ -98,16 +95,16 @@ namespace Merger
                 if (matchedDestinations.Contains(score.Destination.Id) || matchedSources.Contains(score.Source.Id))
                     continue;
 
-                matches.Add(new MergeMatch<T>(score));
+                matches.Add(new MergeMatch(score));
                 matchedSources.Add(score.Source.Id);
                 matchedDestinations.Add(score.Destination.Id);
             }
 
             foreach (var source in sources.Where(s => !matchedSources.Contains(s.Id)))
-                matches.Add(new MergeMatch<T>(source.Instance, null));
+                matches.Add(new MergeMatch(source.Instance, null));
 
             foreach (var destination in destinations.Where(d => !matchedDestinations.Contains(d.Id)))
-                matches.Add(new MergeMatch<T>(null, destination.Instance));
+                matches.Add(new MergeMatch(null, destination.Instance));
 
             return matches;
         }
@@ -119,7 +116,7 @@ namespace Merger
             return GetConflicts(matches);
         }
 
-        private IEnumerable<CompareResult<T>> GetConflicts(IEnumerable<MergeMatch<T>> matches)
+        private IEnumerable<CompareResult<T>> GetConflicts(IEnumerable<MergeMatch> matches)
         {
             var allConflicts = new List<CompareResult<T>>();
             foreach (var match in matches)
@@ -141,7 +138,7 @@ namespace Merger
             return allConflicts;
         }
 
-        public IEnumerable<CompareResult<T>> AutoMergeAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination)
+        public IEnumerable<CompareResult<T>> MergeMissingAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination)
         {
             var matches = CompareInternal(mergeSource, mergeDestination);
 

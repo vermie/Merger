@@ -37,7 +37,7 @@ namespace Merger.Test.Unit
 
             merger.MatchAlgorithm.AddMatchEvaluator(Property1Score, o => o.Property1);
             merger.MatchAlgorithm.AddMatchEvaluator(Property2Score, o => o.Property2);
-            merger.MatchAlgorithm.AddMatchEvaluator(Property3Score, o => o.Property3, new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive));
+            merger.MatchAlgorithm.AddMatchEvaluator(Property3Score, o => o.Property3, new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive));
 
             return merger;
         }

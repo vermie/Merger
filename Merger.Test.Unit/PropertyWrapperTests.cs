@@ -91,7 +91,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void Wrapper_AreEqual_CustomComparer_WorksProperly()
         {
-            var property3Wrapper = new PropertyWrapper<MergeTestObject, string>(o => o.Property3, new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive));
+            var property3Wrapper = new PropertyWrapper<MergeTestObject, string>(o => o.Property3, new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive));
 
             var instance1 = new MergeTestObject()
             {
@@ -156,7 +156,7 @@ namespace Merger.Test.Unit
         {
             Expression<Func<MergeTestObject, int>> expression = o => o.Property1;
 
-            var propertyWrapper = PropertyWrapper.Create(expression);
+            var propertyWrapper = PropertyWrapperHelper.Create(expression);
 
             var instance1 = new MergeTestObject()
             {
@@ -177,7 +177,7 @@ namespace Merger.Test.Unit
         {
             var propertyInfo = typeof(MergeTestObject).GetProperty("Property1");
 
-            var propertyWrapper = PropertyWrapper.Create<MergeTestObject>(propertyInfo);
+            var propertyWrapper = PropertyWrapperHelper.Create<MergeTestObject>(propertyInfo);
 
             var instance1 = new MergeTestObject()
             {
@@ -196,13 +196,13 @@ namespace Merger.Test.Unit
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void ParameterValidation_ThrowsWhenParamterIsNotMemberAccess()
         {
-            PropertyWrapper.Create<MergeTestObject, int>(o => 1);
+            PropertyWrapperHelper.Create<MergeTestObject, int>(o => 1);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void ParameterValidation_ThrowsWhenParamterIsNotPropertyAccess()
         {
-            PropertyWrapper.Create<MergeTestObject, int>(o => o.NotProperty);
+            PropertyWrapperHelper.Create<MergeTestObject, int>(o => o.NotProperty);
         }
     }
 }

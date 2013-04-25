@@ -29,7 +29,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_NoOptions_EqualReturnsTrue()
         {
-            var comparer = new StringSoftEqualityComparer();
+            var comparer = new SoftStringEqualityComparer();
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
         }
@@ -37,7 +37,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_NoOptions_NotEqualReturnsFalse()
         {
-            var comparer = new StringSoftEqualityComparer();
+            var comparer = new SoftStringEqualityComparer();
 
             Assert.IsFalse(comparer.Equals("foo", "bar"));
         }
@@ -45,7 +45,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_IgnoreWhitespace_EqualReturnsTrue()
         {
-            var comparer = new StringSoftEqualityComparer(StringComparisonOptions.IgnoreWhitespace);
+            var comparer = new SoftStringEqualityComparer(StringComparisonOptions.IgnoreWhitespace);
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
             Assert.IsTrue(comparer.Equals("foo", " foo "));
@@ -54,7 +54,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_CaseInsensitive_EqualReturnsTrue()
         {
-            var comparer = new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive);
+            var comparer = new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive);
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
             Assert.IsTrue(comparer.Equals("foo", "FOO"));
@@ -63,7 +63,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_CaseInsensitiveIgnoreWhitespace_EqualReturnsTrue()
         {
-            var comparer = new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive | StringComparisonOptions.IgnoreWhitespace);
+            var comparer = new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive | StringComparisonOptions.IgnoreWhitespace);
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
             Assert.IsTrue(comparer.Equals("foo", " FOO "));
@@ -72,7 +72,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void StringComparer_NullEqualsAnything_EqualReturnsTrue()
         {
-            var comparer = new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive | StringComparisonOptions.IgnoreWhitespace, true);
+            var comparer = new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive | StringComparisonOptions.IgnoreWhitespace, true);
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
             Assert.IsTrue(comparer.Equals("foo", null));
@@ -81,7 +81,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void NullComparer_NullEqualsAnything_NotNull_EqualReturnsTrue()
         {
-            var comparer = new NullAwareSoftEqualityComparer<string>();
+            var comparer = new SoftNullEqualityComparer<string>();
 
             Assert.IsTrue(comparer.Equals("foo", "foo"));
         }
@@ -89,7 +89,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void NullComparer_NullEqualsAnything_Null_EqualReturnsTrue()
         {
-            var comparer = new NullAwareSoftEqualityComparer<string>();
+            var comparer = new SoftNullEqualityComparer<string>();
 
             Assert.IsTrue(comparer.Equals("foo", null));
         }
@@ -97,7 +97,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void NullComparer_NullEqualsAnything_NotNullNullable_EqualReturnsTrue()
         {
-            var comparer = new NullAwareSoftEqualityComparer<int?>();
+            var comparer = new SoftNullEqualityComparer<int?>();
 
             Assert.IsTrue(comparer.Equals(1, 1));
         }
@@ -105,7 +105,7 @@ namespace Merger.Test.Unit
         [TestMethod]
         public void NullComparer_NullEqualsAnything_NullNullable_EqualReturnsTrue()
         {
-            var comparer = new NullAwareSoftEqualityComparer<int?>();
+            var comparer = new SoftNullEqualityComparer<int?>();
 
             Assert.IsTrue(comparer.Equals(1, null));
         }

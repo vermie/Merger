@@ -108,7 +108,7 @@ namespace Merger.Test.Unit
             var merger = MergerHelper.CreateMerger();
 
             // ignore case will result in no conflicts
-            merger.CompareAlgorithm.ForProperty(o => o.Property3, new StringSoftEqualityComparer(StringComparisonOptions.CaseInsensitive));
+            merger.CompareAlgorithm.ForProperty(o => o.Property3, new SoftStringEqualityComparer(StringComparisonOptions.CaseInsensitive));
 
             var conflicts = merger.CompareAlgorithm.Compare(instance1, instance2);
 

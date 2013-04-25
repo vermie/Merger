@@ -127,7 +127,7 @@ namespace Merger.Test.Unit
 
             var merger = MergerHelper.CreateMerger();
 
-            var mergeResults = merger.AutoMergeAndCompare(src, dst);
+            var mergeResults = merger.MergeMissingAndCompare(src, dst);
 
             var result = mergeResults.First();
             Assert.AreEqual(0, result.Conflicts.Count());
@@ -148,7 +148,7 @@ namespace Merger.Test.Unit
 
             var merger = MergerHelper.CreateMerger();
 
-            var mergeResults = merger.AutoMergeAndCompare(src, dst);
+            var mergeResults = merger.MergeMissingAndCompare(src, dst);
 
             var result = mergeResults.First();
             Assert.AreEqual(1, result.Conflicts.Count());

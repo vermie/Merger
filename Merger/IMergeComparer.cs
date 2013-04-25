@@ -5,32 +5,6 @@ using System.Text;
 
 namespace Merger
 {
-    public class Conflict
-    {
-        public string PropertyName { get; private set; }
-        public string DestinationValue { get; private set; }
-        public string SourceValue { get; private set; }
-
-        public Conflict(string name, string sourceValue, string destinationValue)
-        {
-            PropertyName = name;
-            SourceValue = sourceValue;
-            DestinationValue = destinationValue;
-        }
-    }
-
-    public class CompareResult<T>
-    {
-        public T Instance { get; private set; }
-        public IEnumerable<Conflict> Conflicts { get; private set; }
-
-        public CompareResult(T instance, IEnumerable<Conflict> conflicts)
-        {
-            Instance = instance;
-            Conflicts = conflicts;
-        }
-    }
-
     public interface IMergeComparer<T>
         where T : class
     {
@@ -51,6 +25,6 @@ namespace Merger
         /// <param name="mergeSource">The set that is being merged into another set.</param>
         /// <param name="mergeDestination">The set that would ultimately hold the combined set of results.</param>
         /// <returns></returns>
-        IEnumerable<CompareResult<T>> AutoMergeAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination);
+        IEnumerable<CompareResult<T>> MergeMissingAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination);
     }
 }
