@@ -188,5 +188,30 @@ namespace Merger.Test.Unit
             Assert.AreEqual("foo", instance1.Property3);
             Assert.AreEqual("bar", instance2.Property3);
         }
+
+        [TestMethod]
+        public void MergeAll_OverwritesAllValues()
+        {
+            var comparer = MergeComparer<MergeTestObject>.Create(o => o.ID, true);
+
+            var instance1 = new MergeTestObject()
+            {
+                Property1 = 1,
+                Property2 = 3,
+                Property3 = "foo"
+            };
+
+            var instance2 = new MergeTestObject()
+            {
+                Property2 = 0,
+                Property3 = "bar"
+            };
+
+            comparer.CompareAlgorithm.MergeAll(instance1, instance2);
+
+            Assert.AreEqual(instance1.Property1, instance2.Property1);
+            Assert.AreEqual(instance1.Property2, instance2.Property2);
+            Assert.AreEqual(instance1.Property3, instance2.Property3);
+        }
     }
 }

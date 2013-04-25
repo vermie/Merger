@@ -26,5 +26,14 @@ namespace Merger
         /// <param name="mergeDestination">The set that would ultimately hold the combined set of results.</param>
         /// <returns></returns>
         IEnumerable<CompareResult<T>> MergeMissingAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination);
+
+        /// <summary>
+        /// Merges source into destination, and performs a union operation on the supplied sets of objects, and returns the results.</para>
+        /// <para>The union operation is implementation-specified behavior.</para>
+        /// </summary>
+        /// <param name="mergeSource">The set that is being merged into another set.</param>
+        /// <param name="mergeDestination">The set that would ultimately hold the combined set of results.</param>
+        /// <returns></returns>
+        IEnumerable<CompareResult<T>> Merge(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination);
     }
 }

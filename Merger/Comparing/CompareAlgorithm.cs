@@ -15,6 +15,7 @@ namespace Merger
 
         IEnumerable<Conflict> Compare(T source, T destination);
         void MergeMissing(T source, T destination);
+        void MergeAll(T source, T destination);
     }
 
     public class CompareAlgorithm<T, TKey> : ICompareAlgorithm<T>
@@ -131,6 +132,16 @@ namespace Merger
             {
                 if (propertyWrapper.IsDefaultValueOn(destination))
                     propertyWrapper.Copy(source, destination);
+            }
+        }
+
+        public void MergeAll(T source, T destination)
+        {
+            var propertiesToMerge = GetPropertiesToMerge();
+
+            foreach (var propertyWrapper in propertiesToMerge)
+            {
+                propertyWrapper.Copy(source, destination);
             }
         }
     }

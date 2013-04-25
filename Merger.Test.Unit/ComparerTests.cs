@@ -154,5 +154,52 @@ namespace Merger.Test.Unit
             Assert.AreEqual(1, result.Conflicts.Count());
             Assert.AreEqual("bar", result.Instance.Property3);
         }
+
+        [TestMethod]
+        public void Merge_OverwritesAllValues()
+        {
+            List<MergeTestObject> src, dst;
+
+            src = new List<MergeTestObject>();
+            dst = new List<MergeTestObject>();
+
+            var source = new MergeTestObject() { Property1 = 1, Property3 = "foo" };
+            var destination = new MergeTestObject() { Property1 = 2, Property3 = "bar" };
+
+            // match 1 - 1 conflicts
+            src.Add(source);
+            dst.Add(destination);
+
+            var merger = MergerHelper.CreateMerger();
+
+            var mergeResults = merger.Merge(src, dst);
+
+            var result = mergeResults.First();
+            Assert.AreEqual(source.Property1, destination.Property1);
+            Assert.AreEqual(source.Property2, destination.Property2);
+            Assert.AreEqual(source.Property3, destination.Property3);
+        }
+
+        [TestMethod]
+        public void Merge_NoConflicts()
+        {
+            List<MergeTestObject> src, dst;
+
+            src = new List<MergeTestObject>();
+            dst = new List<MergeTestObject>();
+
+            var source = new MergeTestObject() { Property1 = 1, Property3 = "foo" };
+            var destination = new MergeTestObject() { Property1 = 2, Property3 = "bar" };
+
+            // match 1 - 1 conflicts
+            src.Add(source);
+            dst.Add(destination);
+
+            var merger = MergerHelper.CreateMerger();
+
+            var mergeResults = merger.Merge(src, dst);
+
+            Assert.IsTrue(mergeResults.All(r => !r.Conflicts.Any()));
+        }
     }
 }

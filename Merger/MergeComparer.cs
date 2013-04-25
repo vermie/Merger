@@ -138,7 +138,7 @@ namespace Merger
             return allConflicts;
         }
 
-        public IEnumerable<CompareResult<T>> MergeMissingAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination)
+        private IEnumerable<CompareResult<T>> MergeAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination, Action<T, T> merge)
         {
             var matches = CompareInternal(mergeSource, mergeDestination);
 
@@ -150,10 +150,20 @@ namespace Merger
                 if (source == null || destination == null)
                     continue;
 
-                CompareAlgorithm.MergeMissing(source, destination);
+                merge(source, destination);
             }
 
             return GetConflicts(matches);
+        }
+
+        public IEnumerable<CompareResult<T>> MergeMissingAndCompare(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination)
+        {
+            return MergeAndCompare(mergeSource, mergeDestination, CompareAlgorithm.MergeMissing);
+        }
+
+        public IEnumerable<CompareResult<T>> Merge(IEnumerable<T> mergeSource, IEnumerable<T> mergeDestination)
+        {
+            return MergeAndCompare(mergeSource, mergeDestination, CompareAlgorithm.MergeAll);
         }
     }
 }
